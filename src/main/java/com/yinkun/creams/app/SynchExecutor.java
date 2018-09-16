@@ -3,6 +3,7 @@ package com.yinkun.creams.app;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import com.yinkun.creams.synch.BillsSynch;
 import com.yinkun.creams.synch.ParkSynch;
 import com.yinkun.creams.utils.AccessToken;
 
@@ -20,7 +21,10 @@ public class SynchExecutor {
 		ExecutorService fixedThreadPool = Executors.newFixedThreadPool(10);
 		getToken();
 		ParkSynch ps = new ParkSynch(token);
-		fixedThreadPool.execute(ps);
+		BillsSynch bs = new BillsSynch();
+		
+		fixedThreadPool.execute(bs);
+//		fixedThreadPool.execute(ps);
 	}
 
 	public static void getToken() {
