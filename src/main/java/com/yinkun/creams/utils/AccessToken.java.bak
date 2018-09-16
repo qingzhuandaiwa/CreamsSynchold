@@ -1,0 +1,58 @@
+package com.yinkun.creams.utils;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import com.alibaba.fastjson.JSONObject;
+import com.yinkun.workgo.test.kit.HttpHelper;
+
+public class AccessToken {
+	
+	/**
+	 * 获取TOKEN
+	 * @param username
+	 * @param password
+	 * @param tokenUrl
+	 * @return
+	 */
+	@SuppressWarnings("finally")
+	public static String getAccessToken(String username, String password, String tokenUrl){
+		System.out.println("-------获取TOKEN--START----");
+		Map<String, String> params = new HashMap<String, String>();
+        params.put("clientId", "web_app");
+        params.put("password", password);
+        params.put("username", username);
+        String paras = JSONObject.toJSON(params).toString();
+        Map<String,String> headers = new HashMap<String,String>();
+		headers.put("Content-Type", "application/json; charset=utf-8");
+		String accessToken = "";
+        try {
+        	String result = HttpHelper.post(tokenUrl,paras,headers);
+			Map maps = (Map)JSONObject.parse(result);
+	        accessToken = (String)maps.get("accessToken");
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			System.out.println("-------获取TOKEN---ERROR---" + e.getMessage());
+		}finally{
+			System.out.println("-------获取TOKEN---END---");
+			return accessToken;
+		}
+	}
+	
+	/**
+	 * 替换参数
+	 * @param list
+	 * @param accessToken
+	 * @return
+	 */
+//	@SuppressWarnings("unchecked")
+//	public static void replaceAccessToken(List<Source> list, String accessToken){
+//        //extractor.run();
+//        for(Source s:list){
+//        	//String header = s.getStr("header").replaceAll("XXXXXXXX", accessToken);
+//        	((Map)s.getObj("header")).put("Authorization", "Bearer "+accessToken);
+//        }
+//	}
+}

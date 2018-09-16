@@ -1,0 +1,565 @@
+{
+	"id": "b9b3696c-20c1-fe6b-c3ae-7c6f9b58deb1",
+	"name": "WorkGo2.0",
+	"description": "",
+	"order": [
+		"a2a8cacc-4610-5d1c-859f-f0d5d7a70c76",
+		"b2399c6e-49ab-9d9b-9581-5a73507b8349",
+		"2fb65005-c2d9-dd94-7638-66e279212df2",
+		"d38074fa-f8a3-aaa6-a5d0-937d1e858ae6",
+		"ed8c8d76-43a5-bfc4-6d41-8ed1db2a6953",
+		"8a4d0278-cb31-c182-ddc2-6caf497070b9"
+	],
+	"folders": [],
+	"folders_order": [],
+	"timestamp": 1535591602465,
+	"owner": 0,
+	"public": false,
+	"requests": [
+		{
+			"id": "2fb65005-c2d9-dd94-7638-66e279212df2",
+			"headers": "",
+			"headerData": [],
+			"url": "http://{{server}}/api/test?target=http://app.iworkgo.com/pay/query&sk=Rz7yK6kA7789JlCIYZjt/hidhOIeSbsoFkbZQ/fhg8g=&appKey=wk2845346845132800&nonceStr=*&outTradeNo=1234567896574",
+			"queryParams": [
+				{
+					"key": "target",
+					"value": "http://app.iworkgo.com/pay/query",
+					"equals": true,
+					"description": "",
+					"enabled": true
+				},
+				{
+					"key": "sk",
+					"value": "Rz7yK6kA7789JlCIYZjt/hidhOIeSbsoFkbZQ/fhg8g=",
+					"equals": true,
+					"description": "",
+					"enabled": true
+				},
+				{
+					"key": "appKey",
+					"value": "wk2845346845132800",
+					"equals": true,
+					"description": "",
+					"enabled": true
+				},
+				{
+					"key": "nonceStr",
+					"value": "*",
+					"equals": true,
+					"description": "",
+					"enabled": true
+				},
+				{
+					"key": "outTradeNo",
+					"value": "1234567896574",
+					"equals": true,
+					"description": "",
+					"enabled": true
+				}
+			],
+			"preRequestScript": null,
+			"pathVariables": {},
+			"pathVariableData": [],
+			"method": "GET",
+			"data": [],
+			"dataMode": "params",
+			"tests": null,
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"time": 1535680796106,
+			"name": "支付查询接口",
+			"description": "",
+			"collectionId": "b9b3696c-20c1-fe6b-c3ae-7c6f9b58deb1",
+			"responses": []
+		},
+		{
+			"id": "8a4d0278-cb31-c182-ddc2-6caf497070b9",
+			"headers": "",
+			"headerData": [],
+			"url": "http://{{server}}/api/test?target=http://app.iworkgo.com/open/order/save&sk=Rz7yK6kA7789JlCIYZjt/hidhOIeSbsoFkbZQ/fhg8g=&appKey=wk2845346845132800&nonceStr=*&merchantCode=2845478256642048&outTradeNo=1234567896578&payType=wx&totalFee=10&body=SUIBIAN&requestIp=192.168.0.21&nonceStr=*",
+			"queryParams": [
+				{
+					"key": "target",
+					"value": "http://app.iworkgo.com/open/order/save",
+					"equals": true,
+					"description": "",
+					"enabled": true
+				},
+				{
+					"key": "sk",
+					"value": "Rz7yK6kA7789JlCIYZjt/hidhOIeSbsoFkbZQ/fhg8g=",
+					"equals": true,
+					"description": "",
+					"enabled": true
+				},
+				{
+					"key": "appKey",
+					"value": "wk2845346845132800",
+					"equals": true,
+					"description": "",
+					"enabled": true
+				},
+				{
+					"key": "nonceStr",
+					"value": "*",
+					"equals": true,
+					"description": "",
+					"enabled": true
+				},
+				{
+					"key": "merchantCode",
+					"value": "2845478256642048",
+					"equals": true,
+					"description": "园区供应商唯一标识",
+					"enabled": true
+				},
+				{
+					"key": "outTradeNo",
+					"value": "1234567896578",
+					"equals": true,
+					"description": "",
+					"enabled": true
+				},
+				{
+					"key": "payType",
+					"value": "wx",
+					"equals": true,
+					"description": "支付方式",
+					"enabled": true
+				},
+				{
+					"key": "totalFee",
+					"value": "10",
+					"equals": true,
+					"description": "",
+					"enabled": true
+				},
+				{
+					"key": "body",
+					"value": "SUIBIAN",
+					"equals": true,
+					"description": "",
+					"enabled": true
+				},
+				{
+					"key": "requestIp",
+					"value": "192.168.0.21",
+					"equals": true,
+					"description": "",
+					"enabled": true
+				},
+				{
+					"key": "openId",
+					"value": "2623182333151232 ",
+					"equals": true,
+					"description": "",
+					"enabled": false
+				},
+				{
+					"key": "deviceSn",
+					"value": "156818615",
+					"equals": true,
+					"description": "",
+					"enabled": false
+				},
+				{
+					"key": "nonceStr",
+					"value": "*",
+					"equals": true,
+					"description": "",
+					"enabled": true
+				}
+			],
+			"preRequestScript": null,
+			"pathVariables": {},
+			"pathVariableData": [],
+			"method": "GET",
+			"data": [],
+			"dataMode": "params",
+			"tests": null,
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"time": 1535680786170,
+			"name": "订单同步接口",
+			"description": "",
+			"collectionId": "b9b3696c-20c1-fe6b-c3ae-7c6f9b58deb1",
+			"responses": []
+		},
+		{
+			"id": "a2a8cacc-4610-5d1c-859f-f0d5d7a70c76",
+			"headers": "",
+			"headerData": [],
+			"url": "http://{{server}}/api/test?target=http://app.iworkgo.com/open/push&sk=8SSiQjuaSt/6FR9kRQ6EpvM4TLVvSxNuQ1MmNrUDKKI=&appKey=wk2855613186738176&nonceStr=*&openType=1&title=推送测试&openTypeMsg=https://www.baidu.com/&pushRange=2&pushContent=0907开放接口推送04\n&pushPlatform=3&pushGroupType=1&groupType1=1&groupType2=2&classify=2&pushParkId=0",
+			"queryParams": [
+				{
+					"key": "target",
+					"value": "http://app.iworkgo.com/open/push",
+					"equals": true,
+					"description": "",
+					"enabled": true
+				},
+				{
+					"key": "sk",
+					"value": "8SSiQjuaSt/6FR9kRQ6EpvM4TLVvSxNuQ1MmNrUDKKI=",
+					"equals": true,
+					"description": "",
+					"enabled": true
+				},
+				{
+					"key": "appKey",
+					"value": "wk2855613186738176",
+					"equals": true,
+					"description": "",
+					"enabled": true
+				},
+				{
+					"key": "nonceStr",
+					"value": "*",
+					"equals": true,
+					"description": "",
+					"enabled": true
+				},
+				{
+					"key": "openType",
+					"value": "1",
+					"equals": true,
+					"description": "",
+					"enabled": true
+				},
+				{
+					"key": "title",
+					"value": "推送测试",
+					"equals": true,
+					"description": "",
+					"enabled": true
+				},
+				{
+					"key": "openTypeMsg",
+					"value": "https://www.baidu.com/",
+					"equals": true,
+					"description": "",
+					"enabled": true
+				},
+				{
+					"key": "pushRange",
+					"value": "2",
+					"equals": true,
+					"description": "",
+					"enabled": true
+				},
+				{
+					"key": "pushContent",
+					"value": "0907开放接口推送04\n",
+					"equals": true,
+					"description": "",
+					"enabled": true
+				},
+				{
+					"key": "pushPlatform",
+					"value": "3",
+					"equals": true,
+					"description": "",
+					"enabled": true
+				},
+				{
+					"key": "pushGroupType",
+					"value": "1",
+					"equals": true,
+					"description": "",
+					"enabled": true
+				},
+				{
+					"key": "groupType1",
+					"value": "1",
+					"equals": true,
+					"description": "",
+					"enabled": true
+				},
+				{
+					"key": "groupType2",
+					"value": "2",
+					"equals": true,
+					"description": "",
+					"enabled": true
+				},
+				{
+					"key": "targetUserPhones",
+					"value": "15755136628",
+					"equals": true,
+					"description": "",
+					"enabled": false
+				},
+				{
+					"key": "classify",
+					"value": "2",
+					"equals": true,
+					"description": "",
+					"enabled": true
+				},
+				{
+					"key": "pushParkId",
+					"value": "0",
+					"equals": true,
+					"description": "",
+					"enabled": true
+				}
+			],
+			"preRequestScript": null,
+			"pathVariables": {},
+			"pathVariableData": [],
+			"method": "POST",
+			"data": [],
+			"dataMode": "params",
+			"tests": null,
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"time": 1536300467290,
+			"name": "Push接口",
+			"description": "",
+			"collectionId": "b9b3696c-20c1-fe6b-c3ae-7c6f9b58deb1",
+			"responses": []
+		},
+		{
+			"id": "b2399c6e-49ab-9d9b-9581-5a73507b8349",
+			"headers": "",
+			"headerData": [],
+			"url": "http://{{server}}/api/test?target=http://app.iworkgo.com/open/device/warn&sk=Rz7yK6kA7789JlCIYZjt/hidhOIeSbsoFkbZQ/fhg8g=&content=测试的内容&deviceSn=252525&level=1&jsonExtend=test",
+			"queryParams": [
+				{
+					"key": "target",
+					"value": "http://app.iworkgo.com/open/device/warn",
+					"equals": true,
+					"description": "",
+					"enabled": true
+				},
+				{
+					"key": "sk",
+					"value": "Rz7yK6kA7789JlCIYZjt/hidhOIeSbsoFkbZQ/fhg8g=",
+					"equals": true,
+					"description": "",
+					"enabled": true
+				},
+				{
+					"key": "content",
+					"value": "测试的内容",
+					"equals": true,
+					"description": "",
+					"enabled": true
+				},
+				{
+					"key": "deviceSn",
+					"value": "252525",
+					"equals": true,
+					"description": "",
+					"enabled": true
+				},
+				{
+					"key": "level",
+					"value": "1",
+					"equals": true,
+					"description": "",
+					"enabled": true
+				},
+				{
+					"key": "jsonExtend",
+					"value": "test",
+					"equals": true,
+					"description": "",
+					"enabled": true
+				}
+			],
+			"preRequestScript": null,
+			"pathVariables": {},
+			"pathVariableData": [],
+			"method": "GET",
+			"data": [],
+			"dataMode": "params",
+			"tests": null,
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"time": 1535680807217,
+			"name": "告警接口",
+			"description": "",
+			"collectionId": "b9b3696c-20c1-fe6b-c3ae-7c6f9b58deb1",
+			"responses": []
+		},
+		{
+			"id": "d38074fa-f8a3-aaa6-a5d0-937d1e858ae6",
+			"headers": "",
+			"headerData": [],
+			"url": "http://{{server}}/api/test?target=http://app.iworkgo.com/pay/qrCodePay/prepay&sk=Rz7yK6kA7789JlCIYZjt/hidhOIeSbsoFkbZQ/fhg8g=&appKey=wk2845346845132800&nonceStr=*&payCode=1000&outTradeNo=1234567896574&totalFee=10&body=SUIBIAN&requestIp=192.168.0.21&notifyUrl=https://www.baidu.com/&deviceSn=626262",
+			"queryParams": [
+				{
+					"key": "target",
+					"value": "http://app.iworkgo.com/pay/qrCodePay/prepay",
+					"equals": true,
+					"description": "",
+					"enabled": true
+				},
+				{
+					"key": "sk",
+					"value": "Rz7yK6kA7789JlCIYZjt/hidhOIeSbsoFkbZQ/fhg8g=",
+					"equals": true,
+					"description": "",
+					"enabled": true
+				},
+				{
+					"key": "appKey",
+					"value": "wk2845346845132800",
+					"equals": true,
+					"description": "",
+					"enabled": true
+				},
+				{
+					"key": "nonceStr",
+					"value": "*",
+					"equals": true,
+					"description": "",
+					"enabled": true
+				},
+				{
+					"key": "payCode",
+					"value": "1000",
+					"equals": true,
+					"description": "扫码枪得到的付款码",
+					"enabled": true
+				},
+				{
+					"key": "outTradeNo",
+					"value": "1234567896574",
+					"equals": true,
+					"description": "",
+					"enabled": true
+				},
+				{
+					"key": "totalFee",
+					"value": "10",
+					"equals": true,
+					"description": "",
+					"enabled": true
+				},
+				{
+					"key": "body",
+					"value": "SUIBIAN",
+					"equals": true,
+					"description": "",
+					"enabled": true
+				},
+				{
+					"key": "requestIp",
+					"value": "192.168.0.21",
+					"equals": true,
+					"description": "",
+					"enabled": true
+				},
+				{
+					"key": "notifyUrl",
+					"value": "https://www.baidu.com/",
+					"equals": true,
+					"description": "",
+					"enabled": true
+				},
+				{
+					"key": "deviceSn",
+					"value": "626262",
+					"equals": true,
+					"description": "",
+					"enabled": true
+				}
+			],
+			"preRequestScript": null,
+			"pathVariables": {},
+			"pathVariableData": [],
+			"method": "GET",
+			"data": [],
+			"dataMode": "params",
+			"tests": null,
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"time": 1535680790073,
+			"name": "二维码支付",
+			"description": "",
+			"collectionId": "b9b3696c-20c1-fe6b-c3ae-7c6f9b58deb1",
+			"responses": []
+		},
+		{
+			"id": "ed8c8d76-43a5-bfc4-6d41-8ed1db2a6953",
+			"name": "付款码预支付下单",
+			"description": "",
+			"collectionId": "b9b3696c-20c1-fe6b-c3ae-7c6f9b58deb1",
+			"method": "GET",
+			"headers": "",
+			"data": [],
+			"rawModeData": "",
+			"pathVariables": {},
+			"url": "http://{{server}}/api/test?target=http://workgoapi.iworkgo.com/pay/codePay/prepay&sk=FaPUsBhwDRY8DQRHd8ePJXNN7-3k2ntDRFE6e12cFQE&appKey=wk2715475091752960&nonceStr=*&payCode=1000&outTradeNo=&totalFee=&body=&requestIp=&notifyUrl=",
+			"responses": [],
+			"pathVariableData": [],
+			"queryParams": [
+				{
+					"key": "target",
+					"value": "http://workgoapi.iworkgo.com/pay/codePay/prepay",
+					"equals": true,
+					"description": ""
+				},
+				{
+					"key": "sk",
+					"value": "FaPUsBhwDRY8DQRHd8ePJXNN7-3k2ntDRFE6e12cFQE",
+					"equals": true,
+					"description": ""
+				},
+				{
+					"key": "appKey",
+					"value": "wk2715475091752960",
+					"equals": true,
+					"description": ""
+				},
+				{
+					"key": "nonceStr",
+					"value": "*",
+					"equals": true,
+					"description": ""
+				},
+				{
+					"key": "payCode",
+					"value": "1000",
+					"equals": true,
+					"description": "扫码枪得到的付款码"
+				},
+				{
+					"key": "outTradeNo",
+					"value": "",
+					"equals": true,
+					"description": ""
+				},
+				{
+					"key": "totalFee",
+					"value": "",
+					"equals": true,
+					"description": ""
+				},
+				{
+					"key": "body",
+					"value": "",
+					"equals": true,
+					"description": ""
+				},
+				{
+					"key": "requestIp",
+					"value": "",
+					"equals": true,
+					"description": ""
+				},
+				{
+					"key": "notifyUrl",
+					"value": "",
+					"equals": true,
+					"description": ""
+				}
+			],
+			"headerData": [],
+			"collection_id": "b9b3696c-20c1-fe6b-c3ae-7c6f9b58deb1"
+		}
+	]
+}
