@@ -170,22 +170,25 @@ public class BuildingSynch implements Runnable{
 	 * @param parks
 	 * @return
 	 */
-	private boolean updateDataS(List<ParkModel> parks) {
+	private boolean updateDataS(List<BuildingModel> buildings) {
 		int[] count = null;
 		boolean isUptSuccess = false;
 		List<String> sqlList = new ArrayList<String>();
 		try {
-			for(Iterator<ParkModel> it = parks.iterator(); it.hasNext();) {
-				ParkModel park = it.next();
-				String sql = "update park set park_name = '"+ park.getParkName() +"',is_del = '"+ park.getIsDel()
-				+"' ,ctime = '"+ park.getCtime() +"', utime= '"+ park.getUtime() +"' where park_id = " + park.getId() + ";";
+			for(Iterator<BuildingModel> it = buildings.iterator(); it.hasNext();) {
+				BuildingModel building = it.next();
+				
+				String sql = "update building set building_name = '" + building.getBuildingName() + "', park_id='" + building.getParkId() + "', park_name='" + 
+				building.getParkName() + "' , address=‘" + building.getAddress() + "', image_url='" + building.getImageUrl() + "', remark='" + 
+				building.getRemark() +"',is_del = '"+ building.getIsDel()
+				+"' ,ctime = '"+ building.getCtime() +"', utime= '"+ building.getUtime() +"' where building_id = " + building.getId() + ";";
 				sqlList.add(sql);
 			}
 			
 			
 			count = DbHelper.getDb().batch(sqlList, sqlList.size());
 		} catch (Exception e) {
-			logger.info(new SimpleDateFormat(timeFormat).format(new Date()) + " : park 批量更新失败！");
+			logger.info(new SimpleDateFormat(timeFormat).format(new Date()) + " : building 批量更新失败！");
 			e.printStackTrace();
 		}
 		if(count != null && count.length > 0) {
