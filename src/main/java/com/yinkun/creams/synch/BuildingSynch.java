@@ -67,8 +67,8 @@ public class BuildingSynch implements Runnable{
 		try {
 //			result = HttpHelper.post(PropKit.use("config.properties").get("parkUrl"),paras,headers);
 			result = HttpHelper.get(PropKit.use("config.properties").get("buildingUrl"),params,headers);
-			System.out.println(result);
-			
+//			System.out.println(result);
+			logger.info(result);
 			return result;
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -108,7 +108,7 @@ public class BuildingSynch implements Runnable{
 //		List<ParkModel> parkS = jsonResult.getData();
 		
 		if( buildingS == null || buildingS.size() <= 0) {
-			logger.error(new SimpleDateFormat(timeFormat).format(new Date()) + " :building 数据为空！");
+			logger.warn(new SimpleDateFormat(timeFormat).format(new Date()) + " :building 数据为空！");
 			return false;
 		}
 		
@@ -155,7 +155,7 @@ public class BuildingSynch implements Runnable{
 			}
 			count = DbHelper.getDb().batch(sqlList, sqlList.size());
 		} catch (Exception e) {
-			logger.info(new SimpleDateFormat(timeFormat).format(new Date()) + " :building 批量插入失败！");
+			logger.error(new SimpleDateFormat(timeFormat).format(new Date()) + " :building 批量插入失败！");
 			e.printStackTrace();
 		}
 		
@@ -179,7 +179,7 @@ public class BuildingSynch implements Runnable{
 				BuildingModel building = it.next();
 				
 				String sql = "update building set building_name = '" + building.getBuildingName() + "', park_id='" + building.getParkId() + "', park_name='" + 
-				building.getParkName() + "' , address=‘" + building.getAddress() + "', image_url='" + building.getImageUrl() + "', remark='" + 
+				building.getParkName() + "' , address='" + building.getAddress() + "', image_url='" + building.getImageUrl() + "', remark='" + 
 				building.getRemark() +"',is_del = '"+ building.getIsDel()
 				+"' ,ctime = '"+ building.getCtime() +"', utime= '"+ building.getUtime() +"' where building_id = " + building.getId() + ";";
 				sqlList.add(sql);
@@ -188,7 +188,7 @@ public class BuildingSynch implements Runnable{
 			
 			count = DbHelper.getDb().batch(sqlList, sqlList.size());
 		} catch (Exception e) {
-			logger.info(new SimpleDateFormat(timeFormat).format(new Date()) + " : building 批量更新失败！");
+			logger.error(new SimpleDateFormat(timeFormat).format(new Date()) + " : building 批量更新失败！");
 			e.printStackTrace();
 		}
 		if(count != null && count.length > 0) {
@@ -205,7 +205,7 @@ public class BuildingSynch implements Runnable{
 			insertDataS(insertDatas);
 		}
 		if(updateDatas != null && updateDatas.size() > 0) {
-//			updateDataS(updateDatas);
+			updateDataS(updateDatas);
 		}
 	}
 	
@@ -215,7 +215,8 @@ public class BuildingSynch implements Runnable{
 		Date lastDate = BuildingService.getLastUpdateDate();
 		String result = fetchFromWebApi(token,lastDate);
 		if(StrKit.isBlank(result)) {
-			System.out.println(new SimpleDateFormat(timeFormat).format(new Date()) + " :building 网络接口调用异常！");
+//			System.out.println();
+			logger.error(new SimpleDateFormat(timeFormat).format(new Date()) + " :building 网络接口调用异常！");
 			return;
 		}
 		Boolean isSuccess = ProcessDataS(result);

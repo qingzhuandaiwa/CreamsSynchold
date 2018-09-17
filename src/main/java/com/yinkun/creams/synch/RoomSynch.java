@@ -1,6 +1,5 @@
 package com.yinkun.creams.synch;
 
-import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -12,34 +11,32 @@ import java.util.Map;
 
 import org.apache.log4j.Logger;
 
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.jfinal.kit.PropKit;
 import com.jfinal.kit.StrKit;
-import com.jfinal.log.Log;
-import com.yinkun.creams.bean.JsonResult;
+import com.yinkun.creams.bean.BuildingModel;
 import com.yinkun.creams.bean.ParkModel;
-import com.yinkun.creams.model.Park;
+import com.yinkun.creams.bean.RoomModel;
 import com.yinkun.creams.service.ParkService;
-import com.yinkun.creams.utils.AccessToken;
+import com.yinkun.creams.service.RoomService;
 import com.yinkun.creams.utils.DbHelper;
 import com.yinkun.workgo.test.kit.HttpHelper;
 
-public class ParkSynch implements Runnable{  
-	Logger logger = Logger.getLogger(ParkSynch.class);
-//    private static final int JsonResult = 0;
-	private String timeFormat = "yyyy-MM-dd HH:mm:ss";
+public class RoomSynch implements Runnable{
 
-    public List<ParkModel> insertDatas = new ArrayList<ParkModel>(); 
-    public List<ParkModel> updateDatas = new ArrayList<ParkModel>(); 
-	
 	private Date lastUptDate = null;
+	
+	private static String timeFormat = "yyyy-MM-dd HH:mm:ss";
+
+	Logger logger = Logger.getLogger(ParkSynch.class);
+	
+    public List<RoomModel> insertDatas = new ArrayList<RoomModel>(); 
+    public List<RoomModel> updateDatas = new ArrayList<RoomModel>(); 
 	
 	private String token;
 	
-	public ParkSynch(String token) {
+	public RoomSynch(String token) {
 		this.token = token;
 	}
 	
@@ -72,8 +69,8 @@ public class ParkSynch implements Runnable{
 		try {
 //			result = HttpHelper.post(PropKit.use("config.properties").get("parkUrl"),paras,headers);
 			result = HttpHelper.get(PropKit.use("config.properties").get("parkUrl"),params,headers);
-			System.out.println(result);
-			
+//			System.out.println(result);
+			logger.info(result);
 			return result;
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -108,113 +105,52 @@ public class ParkSynch implements Runnable{
 		
 		JSONArray arr=jsonResult.getJSONArray("data");//获取的结果集合转换成数组
 		String js=JSONObject.toJSONString(arr);//将array数组转换成字符串
-		List<ParkModel>  parkS = JSONObject.parseArray(js, ParkModel.class);//把字符串转换成集合
+		List<RoomModel>  rooms = JSONObject.parseArray(js, RoomModel.class);//把字符串转换成集合
 //		List<ParkModel> parkS = JSON.parseArray(jsonResult.getString("data"),ParkModel.class);
 //		List<ParkModel> parkS = jsonResult.getData();
 		
-		if( parkS == null || parkS.size() <= 0) {
-			logger.warn(new SimpleDateFormat(timeFormat).format(new Date()) + " :park 数据为空！");
+		if( rooms == null || rooms.size() <= 0) {
+			logger.warn(new SimpleDateFormat(timeFormat).format(new Date()) + " :room 数据为空！");
 			return false;
 		}
 		
 		try {
-			for(Iterator<ParkModel> it = parkS.iterator();it.hasNext();) {
-				ParkModel park = it.next();
-				if(park.getCtime().getTime() == park.getUtime().getTime() || park.getCtime().getTime() > lastUptDate.getTime()) {
-					this.insertDatas.add(park);
+			for(Iterator<RoomModel> it = rooms.iterator();it.hasNext();) {
+				RoomModel room = it.next();
+				if(room.getCtime().getTime() == room.getUtime().getTime() || room.getCtime().getTime() > lastUptDate.getTime()) {
+					this.insertDatas.add(room);
 				}else {
-					this.updateDatas.add(park);
+					this.updateDatas.add(room);
 				}
 			}
 		} catch (Exception e) {
-			logger.error(new SimpleDateFormat(timeFormat).format(new Date()) + "遍历parks失败");
+			logger.error(new SimpleDateFormat(timeFormat).format(new Date()) + "遍历rooms失败");
 			e.printStackTrace();
 			return false;
 		}
 		return true;
 	}
-
-
-
+	
 	/**
 	 * 同步数据
 	 */
 	public void SynchDatas() {
 		if(insertDatas != null && insertDatas.size() > 0) {
-			insertDataS(insertDatas);
+			RoomService.insertDataS(insertDatas);
 		}
 		if(updateDatas != null && updateDatas.size() > 0) {
-			updateDataS(updateDatas);
+			RoomService.updateDataS(updateDatas);
 		}
 	}
 	
-	/**
-	 * 插入数据
-	 * @param parks
-	 * @return
-	 */
-	private boolean insertDataS(List<ParkModel> parks) {
-		int[] count = null;
-		boolean isInsertSuccess = false;
-		List<String> sqlList = new ArrayList<String>();
-
-
-		try {
-			for(Iterator<ParkModel> it = parks.iterator(); it.hasNext();) {
-				ParkModel park = it.next();
-				String sql = "INSERT INTO park (park_id,park_name,is_del,ctime,utime) VALUES (" +
-				park.getId() +", '"+ park.getParkName() +"'," + 
-				park.getIsDel() + ",'" + park.getCtime() + "','"+ park.getUtime() +"');";
-				sqlList.add(sql);
-			}
-			count = DbHelper.getDb().batch(sqlList, sqlList.size());
-		} catch (Exception e) {
-			logger.info(new SimpleDateFormat(timeFormat).format(new Date()) + " :park 批量插入失败！");
-			e.printStackTrace();
-		}
-		
-		if(count != null && count.length > 0) {
-			isInsertSuccess = true;
-		}
-		return isInsertSuccess;
-	}
-	
-	/**
-	 * 修改数据
-	 * @param parks
-	 * @return
-	 */
-	private boolean updateDataS(List<ParkModel> parks) {
-		int[] count = null;
-		boolean isUptSuccess = false;
-		List<String> sqlList = new ArrayList<String>();
-		try {
-			for(Iterator<ParkModel> it = parks.iterator(); it.hasNext();) {
-				ParkModel park = it.next();
-				String sql = "update park set park_name = '"+ park.getParkName() +"',is_del = '"+ park.getIsDel()
-				+"' ,ctime = '"+ park.getCtime() +"', utime= '"+ park.getUtime() +"' where park_id = " + park.getId() + ";";
-				sqlList.add(sql);
-			}
-			
-			
-			count = DbHelper.getDb().batch(sqlList, sqlList.size());
-		} catch (Exception e) {
-			logger.info(new SimpleDateFormat(timeFormat).format(new Date()) + " : park 批量更新失败！");
-			e.printStackTrace();
-		}
-		if(count != null && count.length > 0) {
-			isUptSuccess = true;
-		}
-		return isUptSuccess;
-	}
 	
 	public void run() {
 		// TODO Auto-generated method stub
-		System.out.println("parkSynch thread is running ...");
-		Date lastDate = ParkService.getLastUpdateDate();
+		System.out.println("RoomSynch thread is running ...");
+		Date lastDate = RoomService.getLastUpdateDate();
 		String result = fetchFromWebApi(token,lastDate);
 		if(StrKit.isBlank(result)) {
-			logger.info(new SimpleDateFormat(timeFormat).format(new Date()) + " :park 网络接口调用异常！");
+			logger.error(new SimpleDateFormat(timeFormat).format(new Date()) + " :park 网络接口调用异常！");
 			return;
 		}
 		Boolean isSuccess = ProcessDataS(result);
