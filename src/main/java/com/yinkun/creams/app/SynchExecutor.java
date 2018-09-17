@@ -16,7 +16,7 @@ public class SynchExecutor {
 		executeSysch();
 	}
 	/**
-	 * 开始同步
+	 * 寮�濮嬪悓姝�
 	 */
 	public static void executeSysch() {
 		ExecutorService fixedThreadPool = Executors.newFixedThreadPool(10);
@@ -30,7 +30,7 @@ public class SynchExecutor {
 //		fixedThreadPool.execute(ps);
 	}
 
-	public static void getToken() {
+	public static void getToken() { 
 		token = AccessToken.getToken();
 		System.out.println("token is : " + token);
 	}
