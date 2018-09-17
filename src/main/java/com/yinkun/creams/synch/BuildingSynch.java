@@ -15,6 +15,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.jfinal.kit.PropKit;
 import com.jfinal.kit.StrKit;
+import com.jfinal.plugin.activerecord.Record;
 import com.yinkun.creams.bean.BuildingModel;
 import com.yinkun.creams.bean.ParkModel;
 import com.yinkun.creams.service.BuildingService;
@@ -113,15 +114,41 @@ public class BuildingSynch implements Runnable{
 			return false;
 		}
 		
+		List<String> ids = new ArrayList<String>();
+		StringBuilder sql = new StringBuilder("select * from ( ");
+		
 		try {
 			for(Iterator<BuildingModel> it = buildingS.iterator();it.hasNext();) {
 				BuildingModel buildingModel = it.next();
-				if(buildingModel.getCtime().getTime() == buildingModel.getUtime().getTime() || buildingModel.getCtime().getTime() > lastUptDate.getTime()) {
-					this.insertDatas.add(buildingModel);
+				sql.append("select '" + buildingModel.getId() + "' id UNION ");
+//				ids.add();
+//				if(buildingModel.getCtime().getTime() == buildingModel.getUtime().getTime() || buildingModel.getCtime().getTime() > lastUptDate.getTime()) {
+//					this.insertDatas.add(buildingModel);
+//				}else {
+//					this.updateDatas.add(buildingModel);
+//				}
+			}
+			int lastUnIndx = sql.lastIndexOf("UNION");
+			int lastIndx = sql.length();
+			if(sql.lastIndexOf("UNION") > 0) {
+				sql.delete(sql.lastIndexOf("UNION"), lastIndx-1);
+			}
+			
+			sql.append("from dual) temp where EXISTS (SELECT 1 from building where temp.id = building_id)");
+			
+
+			List<String> rcdS = DbHelper.getDb().query(sql.toString());
+			
+			for(Iterator<BuildingModel> it = buildingS.iterator();it.hasNext();) {
+				BuildingModel buildModel = it.next();
+				if(rcdS.contains(buildModel.getId())) {
+					this.updateDatas.add(buildModel);
 				}else {
-					this.updateDatas.add(buildingModel);
+					this.insertDatas.add(buildModel);
 				}
 			}
+			
+			
 		} catch (Exception e) {
 			logger.error(new SimpleDateFormat(timeFormat).format(new Date()) + "遍历building失败");
 			e.printStackTrace();
