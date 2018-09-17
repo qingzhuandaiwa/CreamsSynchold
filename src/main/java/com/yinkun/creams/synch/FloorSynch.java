@@ -131,10 +131,20 @@ public class FloorSynch implements Runnable {
 	 */
 	public void SynchDatas() {
 		if(insertDatas != null && insertDatas.size() > 0) {
-			FloorService.insertDataS(insertDatas);
+			boolean isSuccess = FloorService.insertDataS(insertDatas);
+			if(isSuccess) {
+				logger.info("新增成功");
+			}else {
+				logger.info("新增失败");
+			}
 		}
 		if(updateDatas != null && updateDatas.size() > 0) {
-			FloorService.updateDataS(updateDatas);
+			boolean isSuccess = FloorService.updateDataS(updateDatas);
+			if(isSuccess) {
+				logger.info("更新成功");
+			}else {
+				logger.info("更新失败");
+			}
 		}
 	}
 	

@@ -18,6 +18,7 @@ import com.jfinal.kit.StrKit;
 import com.yinkun.creams.bean.BuildingModel;
 import com.yinkun.creams.bean.ParkModel;
 import com.yinkun.creams.service.BuildingService;
+import com.yinkun.creams.service.FloorService;
 import com.yinkun.creams.service.ParkService;
 import com.yinkun.creams.utils.DbHelper;
 import com.yinkun.workgo.test.kit.HttpHelper;
@@ -202,10 +203,20 @@ public class BuildingSynch implements Runnable{
 	 */
 	public void SynchDatas() {
 		if(insertDatas != null && insertDatas.size() > 0) {
-			insertDataS(insertDatas);
+			boolean isSuccess = insertDataS(insertDatas);
+			if(isSuccess) {
+				logger.info("新增成功");
+			}else {
+				logger.info("新增失败");
+			}
 		}
 		if(updateDatas != null && updateDatas.size() > 0) {
-			updateDataS(updateDatas);
+			boolean isSuccess = updateDataS(updateDatas);
+			if(isSuccess) {
+				logger.info("更新成功");
+			}else {
+				logger.info("更新失败");
+			}
 		}
 	}
 	

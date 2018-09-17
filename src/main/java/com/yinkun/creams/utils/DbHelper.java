@@ -93,7 +93,7 @@ public class DbHelper {
 				status = true;// 启动成功
 				System.out.println("加载数据库配置结束！");
 			} else {
-				System.out.println("数据库配置已经启动！");
+//				System.out.println("数据库配置已经启动！");
 			}
 		}
 	}

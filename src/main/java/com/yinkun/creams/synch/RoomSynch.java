@@ -52,7 +52,7 @@ public class RoomSynch implements Runnable{
 		//日期转字符串
 		if(lastDate == null) {
 			Calendar now = Calendar.getInstance();
-			now.add(Calendar.MONTH, -1);// 月份减1 
+			now.add(Calendar.MONTH, -3);// 月份减1 
 			lastDate = now.getTime();
 		}
 		
@@ -68,7 +68,7 @@ public class RoomSynch implements Runnable{
 		String result = null;
 		try {
 //			result = HttpHelper.post(PropKit.use("config.properties").get("parkUrl"),paras,headers);
-			result = HttpHelper.get(PropKit.use("config.properties").get("parkUrl"),params,headers);
+			result = HttpHelper.get(PropKit.use("config.properties").get("roomUrl"),params,headers);
 //			System.out.println(result);
 			logger.info(result);
 			return result;
@@ -136,10 +136,20 @@ public class RoomSynch implements Runnable{
 	 */
 	public void SynchDatas() {
 		if(insertDatas != null && insertDatas.size() > 0) {
-			RoomService.insertDataS(insertDatas);
+			boolean isSuccess = RoomService.insertDataS(insertDatas);
+			if(isSuccess) {
+				logger.info("新增成功");
+			}else {
+				logger.info("新增失败");
+			}
 		}
 		if(updateDatas != null && updateDatas.size() > 0) {
-			RoomService.updateDataS(updateDatas);
+			boolean isSuccess = RoomService.updateDataS(updateDatas);
+			if(isSuccess) {
+				logger.info("更新成功");
+			}else {
+				logger.info("更新失败");
+			}
 		}
 	}
 	
