@@ -179,8 +179,10 @@ public class FloorSynch implements Runnable {
 		Date lastDate = FloorService.getLastUpdateDate();
 		
 		Calendar calendar = Calendar.getInstance();
-		calendar.setTime(lastDate);
-		calendar.add(Calendar.MINUTE, -1);//
+		if(lastDate != null) {
+			calendar.setTime(lastDate);
+			calendar.add(Calendar.MINUTE, -1);//
+		}
 		
 		String result = fetchFromWebApi(token, calendar.getTime());
 		if(StrKit.isBlank(result)) {

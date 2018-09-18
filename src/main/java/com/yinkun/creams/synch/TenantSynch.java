@@ -15,32 +15,29 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.jfinal.kit.PropKit;
 import com.jfinal.kit.StrKit;
-import com.yinkun.creams.bean.BuildingModel;
-import com.yinkun.creams.bean.FloorModel;
-import com.yinkun.creams.bean.ParkModel;
 import com.yinkun.creams.bean.RoomModel;
-import com.yinkun.creams.service.ParkService;
+import com.yinkun.creams.bean.TenantModel;
 import com.yinkun.creams.service.RoomService;
+import com.yinkun.creams.service.TenantService;
 import com.yinkun.creams.utils.DbHelper;
 import com.yinkun.workgo.test.kit.HttpHelper;
 
-public class RoomSynch implements Runnable{
+public class TenantSynch implements Runnable{
 
 	private Date lastUptDate = null;
 	
 	private static String timeFormat = "yyyy-MM-dd HH:mm:ss";
 
-	Logger logger = Logger.getLogger(ParkSynch.class);
+	Logger logger = Logger.getLogger(TenantSynch.class);
 	
-    public List<RoomModel> insertDatas = new ArrayList<RoomModel>(); 
-    public List<RoomModel> updateDatas = new ArrayList<RoomModel>(); 
+    public List<TenantModel> insertDatas = new ArrayList<TenantModel>(); 
+    public List<TenantModel> updateDatas = new ArrayList<TenantModel>(); 
 	
 	private String token;
 	
-	public RoomSynch(String token) {
+	public TenantSynch(String token) {
 		this.token = token;
 	}
-	
 	
 	/**
 	 * 从webapi中获取数据
@@ -69,7 +66,7 @@ public class RoomSynch implements Runnable{
 		String result = null;
 		try {
 //			result = HttpHelper.post(PropKit.use("config.properties").get("parkUrl"),paras,headers);
-			result = HttpHelper.get(PropKit.use("config.properties").get("roomUrl"),params,headers);
+			result = HttpHelper.get(PropKit.use("config.properties").get("tenantUrl"),params,headers);
 //			System.out.println(result);
 			logger.info(result);
 			return result;
@@ -87,45 +84,42 @@ public class RoomSynch implements Runnable{
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public Boolean ProcessDataS(String result) {
 		JSONObject jsonResult = null;
-		
-//		List<Student> studentList1 = JSON.parseArray(JSON.parseObject(json).getString("studentList"), Student.class);
-		
 		try {
 			jsonResult = JSONObject.parseObject(result);
 		} catch (Exception e) {
 			e.printStackTrace();
-			logger.error(new SimpleDateFormat(timeFormat).format(new Date()) + " :park 解析数据内容失败！");
+			logger.error(new SimpleDateFormat(timeFormat).format(new Date()) + " : 解析数据内容失败！");
 			return false;
 		}
 		
 		if(jsonResult.getIntValue("code") != 200) {
 			logger.error(new SimpleDateFormat(timeFormat).format(new Date()) + 
-					" :park 网络接口调用出现问题,code: "+ jsonResult.getIntValue("code") +", message=" + jsonResult.getString("message") +" ！");
+					" : 网络接口调用出现问题,code: "+ jsonResult.getIntValue("code") +", message=" + jsonResult.getString("message") +" ！");
 			return false;
 		}
 		
 		JSONArray arr=jsonResult.getJSONArray("data");//获取的结果集合转换成数组
 		String js=JSONObject.toJSONString(arr);//将array数组转换成字符串
-		List<RoomModel>  rooms = JSONObject.parseArray(js, RoomModel.class);//把字符串转换成集合
+		List<TenantModel>  tenants = JSONObject.parseArray(js, TenantModel.class);//把字符串转换成集合
 //		List<ParkModel> parkS = JSON.parseArray(jsonResult.getString("data"),ParkModel.class);
 //		List<ParkModel> parkS = jsonResult.getData();
 		
-		if( rooms == null || rooms.size() <= 0) {
-			logger.warn(new SimpleDateFormat(timeFormat).format(new Date()) + " :room 数据为空！");
+		if( tenants == null || tenants.size() <= 0) {
+			logger.warn(new SimpleDateFormat(timeFormat).format(new Date()) + " :tenant 数据为空！");
 			return false;
 		}
 		
 		StringBuilder sql = new StringBuilder("select * from ( ");
 		
 		try {
-			for(Iterator<RoomModel> it = rooms.iterator();it.hasNext();) {
-				RoomModel room = it.next();
+			for(Iterator<TenantModel> it = tenants.iterator();it.hasNext();) {
+				TenantModel tenant = it.next();
 //				if(room.getCtime().getTime() == room.getUtime().getTime() || room.getCtime().getTime() > lastUptDate.getTime()) {
 //					this.insertDatas.add(room);
 //				}else {
 //					this.updateDatas.add(room);
 //				}
-				sql.append("select '" + room.getId() + "' id UNION ");
+				sql.append("select '" + tenant.getId() + "' id UNION ");
 			}
 			
 			int lastUnIndx = sql.lastIndexOf("UNION");
@@ -134,15 +128,15 @@ public class RoomSynch implements Runnable{
 				sql.delete(lastUnIndx, length-1);
 			}
 			
-			sql.append("from dual) temp where EXISTS (SELECT 1 from room where temp.id = room_id)");
+			sql.append("from dual) temp where EXISTS (SELECT 1 from tenant where temp.id = enterprise_id)");
 			List<String> rcdS = DbHelper.getDb().query(sql.toString());
 			
-			for(Iterator<RoomModel> it = rooms.iterator();it.hasNext();) {
-				RoomModel roomModel = it.next();
-				if(rcdS.contains(roomModel.getId())) {
-					this.updateDatas.add(roomModel);
+			for(Iterator<TenantModel> it = tenants.iterator();it.hasNext();) {
+				TenantModel tenantModel = it.next();
+				if(rcdS.contains(tenantModel.getId())) {
+					this.updateDatas.add(tenantModel);
 				}else {
-					this.insertDatas.add(roomModel);
+					this.insertDatas.add(tenantModel);
 				}
 			}
 		} catch (Exception e) {
@@ -158,7 +152,7 @@ public class RoomSynch implements Runnable{
 	 */
 	public void SynchDatas() {
 		if(insertDatas != null && insertDatas.size() > 0) {
-			boolean isSuccess = RoomService.insertDataS(insertDatas);
+			boolean isSuccess = TenantService.insertDataS(insertDatas);
 			if(isSuccess) {
 				logger.info("新增成功");
 			}else {
@@ -166,7 +160,7 @@ public class RoomSynch implements Runnable{
 			}
 		}
 		if(updateDatas != null && updateDatas.size() > 0) {
-			boolean isSuccess = RoomService.updateDataS(updateDatas);
+			boolean isSuccess = TenantService.updateDataS(updateDatas);
 			if(isSuccess) {
 				logger.info("更新成功");
 			}else {
@@ -175,17 +169,16 @@ public class RoomSynch implements Runnable{
 		}
 	}
 	
-	
 	public void run() {
-		// TODO Auto-generated method stub
-		System.out.println("RoomSynch thread is running ...");
-		Date lastDate = RoomService.getLastUpdateDate();
-		Calendar calendar = Calendar.getInstance();
+		System.out.println("TenantSynch thread is running ...");
+		Date lastDate = TenantService.getLastUpdateDate();
 		if(lastDate != null) {
+			Calendar calendar = Calendar.getInstance();
 			calendar.setTime(lastDate);
 			calendar.add(Calendar.MINUTE, -1);//
+			lastDate = calendar.getTime();
 		}
-		String result = fetchFromWebApi(token,calendar.getTime());
+		String result = fetchFromWebApi(token,lastDate);
 		if(StrKit.isBlank(result)) {
 			logger.error(new SimpleDateFormat(timeFormat).format(new Date()) + " :park 网络接口调用异常！");
 			return;

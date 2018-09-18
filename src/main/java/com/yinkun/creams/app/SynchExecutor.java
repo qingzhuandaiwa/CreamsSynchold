@@ -11,6 +11,7 @@ import com.yinkun.creams.synch.BuildingSynch;
 import com.yinkun.creams.synch.FloorSynch;
 import com.yinkun.creams.synch.ParkSynch;
 import com.yinkun.creams.synch.RoomSynch;
+import com.yinkun.creams.synch.TenantSynch;
 import com.yinkun.creams.utils.AccessToken;
 
 public class SynchExecutor {
@@ -33,10 +34,12 @@ public class SynchExecutor {
 		BuildingSynch buildingSynch = new BuildingSynch(token);
 		FloorSynch floorSynch = new FloorSynch(token);
 		RoomSynch roomSynch = new RoomSynch(token);
+		TenantSynch tenantSynch = new TenantSynch(token);
 //		fixedThreadPool.execute(ps);
 		fixedThreadPool.execute(buildingSynch);
 		fixedThreadPool.execute(floorSynch);
 		fixedThreadPool.execute(roomSynch);
+		fixedThreadPool.execute(tenantSynch);
 	}
 
 	public static void getToken() { 
