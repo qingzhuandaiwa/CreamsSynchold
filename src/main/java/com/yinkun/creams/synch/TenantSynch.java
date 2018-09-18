@@ -1,5 +1,6 @@
 package com.yinkun.creams.synch;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -178,6 +179,17 @@ public class TenantSynch implements Runnable{
 			calendar.add(Calendar.MINUTE, -1);//
 			lastDate = calendar.getTime();
 		}
+//		java.text.SimpleDateFormat formatter = new SimpleDateFormat(timeFormat);
+//		Date time = null;
+//		String s= "2018-07-06 11:14:04";
+//		Date date = null;
+//		try {
+//			date = formatter.parse(s);
+//		} catch (ParseException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+		
 		String result = fetchFromWebApi(token,lastDate);
 		if(StrKit.isBlank(result)) {
 			logger.error(new SimpleDateFormat(timeFormat).format(new Date()) + " :park 网络接口调用异常！");

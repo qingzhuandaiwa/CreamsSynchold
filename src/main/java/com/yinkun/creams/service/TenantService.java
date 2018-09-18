@@ -1,5 +1,6 @@
 package com.yinkun.creams.service;
 
+import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -46,6 +47,17 @@ public class TenantService {
 		try {
 			for(Iterator<TenantModel> it = tenants.iterator(); it.hasNext();) {
 				TenantModel tenant = it.next();
+				
+//				String approvalTime = "'0000-00-00 00:00:00'";
+				String approvalTime = null;
+				if(tenant.getApprovalTime() != null) {
+					approvalTime = "'" + tenant.getApprovalTime()+ "'";
+				}
+				String foundingTime =null;
+				if( tenant.getFoundingTime() !=null) {
+					foundingTime =  "'" +tenant.getFoundingTime() + "'";
+				}
+				
 				String sql = "INSERT INTO tenant "
 						+ "(enterprise_id,enterprise_name,contacts,certificate_number,legal_person,"
 						+ "has_current_contract,tel,email,address,remark,approval_time,birth_country,"
@@ -56,9 +68,9 @@ public class TenantService {
 						+ "(" +
 						tenant.getId() + ", '"+ tenant.getEnterpriseName() +"', '" + tenant.getContacts() + "', '" + tenant.getCertificateNumber() + "', '" +  
 						tenant.getLegalPerson() + "', '" + tenant.getHasCurrentContract()+ "', '" + tenant.getTel()+"', '" + tenant.getEmail() + "', '" + 
-						tenant.getAddress() + "', '" + tenant.getRemark() + "', '" + tenant.getApprovalTime() + "', '" + tenant.getBirthCountry() + "', '" + tenant.getBusinessAddress() + "', '" + 
+						tenant.getAddress() + "', '" + tenant.getRemark() + "', " + approvalTime + ", '" + tenant.getBirthCountry() + "', '" + tenant.getBusinessAddress() + "', '" + 
 						tenant.getBusinessIndustry() + "', '" + tenant.getBusinessScope() + "', '" + tenant.getBusinessTerm() + "', '" + tenant.getCompanyType() + "', '" + tenant.getDistrict() + "', '" + 
-						tenant.getEnglishName() + "', '" + tenant.getFoundingTime() + "', '" + tenant.getOperatingState() + "', '" + tenant.getOrganizationCode() + "', '" + tenant.getRegisteredCapital() + "', '" +
+						tenant.getEnglishName() + "', " + foundingTime + ", '" + tenant.getOperatingState() + "', '" + tenant.getOrganizationCode() + "', '" + tenant.getRegisteredCapital() + "', '" +
 						tenant.getRegistrationAuthority() + "', '" + tenant.getRegistrationNumber() + "', '" + tenant.getStaffSize() + "', '" + tenant.getTaxpayerIdNumber() + "', '" + tenant.getUnifiedSocialCreditCode() + "', " +
 						tenant.getIsDel() + ",'" + tenant.getCtime() + "','"+ tenant.getUtime() +"')";
 				sqlList.add(sql);
@@ -87,14 +99,22 @@ public class TenantService {
 		try {
 			for(Iterator<TenantModel> it = tenants.iterator(); it.hasNext();) {
 				TenantModel tenant = it.next();
+				String approvalTime = null;
+				if(tenant.getApprovalTime() != null) {
+					approvalTime = "'" + tenant.getApprovalTime()+ "'";
+				}
+				String foundingTime =null;
+				if( tenant.getFoundingTime() !=null) {
+					foundingTime =  "'" +tenant.getFoundingTime() + "'";
+				}
 				
 				String sql = "update tenant set enterprise_name = '" + tenant.getEnterpriseName() + "' ,contacts='" + tenant.getContacts() + 
 						"', certificate_number='" + tenant.getCertificateNumber() +  "', legal_person='" + tenant.getLegalPerson() + "', has_current_contract='" + 
 						tenant.getHasCurrentContract() + "', tel='" + tenant.getTel() + "', email='" + tenant.getEmail() + "', address='" + tenant.getAddress() + "', remark='" + tenant.getRemark() + 
-						"', approval_time='" + tenant.getApprovalTime() + "', birth_country='" + tenant.getBirthCountry() + "',business_address='" + tenant.getBusinessAddress() + 
+						"', approval_time=" + approvalTime + ", birth_country='" + tenant.getBirthCountry() + "',business_address='" + tenant.getBusinessAddress() + 
 						"', business_industry='" + tenant.getBusinessIndustry() + "', business_scope='" + tenant.getBusinessScope() + "', business_term='" + tenant.getBusinessTerm() + 
-						"', company_type='" + tenant.getCompanyType() + "', district='" + tenant.getDistrict() + "', english_name='" + tenant.getEnglishName() + "', founding_time='" + tenant.getFoundingTime() + 
-						"', operating_state='" + tenant.getOperatingState() + "', organization_code='" +tenant.getOrganizationCode() + "', registered_capital='" + tenant.getRegisteredCapital() + 
+						"', company_type='" + tenant.getCompanyType() + "', district='" + tenant.getDistrict() + "', english_name='" + tenant.getEnglishName() + "', founding_time=" + foundingTime + 
+						", operating_state='" + tenant.getOperatingState() + "', organization_code='" +tenant.getOrganizationCode() + "', registered_capital='" + tenant.getRegisteredCapital() + 
 						"', registration_authority='" + tenant.getRegistrationAuthority() + "', registration_number='" + tenant.getRegistrationNumber() + "', staff_size='" + tenant.getStaffSize() + 
 						"', taxpayerId_number='" + tenant.getTaxpayerIdNumber() + "', unifiedSocialCreditCode='" + tenant.getUnifiedSocialCreditCode() +
 						"',is_del = '"+ tenant.getIsDel() +"' ,ctime = '"+ tenant.getCtime() +"', utime= '"+ tenant.getUtime() +"' where enterprise_id = " + tenant.getId() + ";";
