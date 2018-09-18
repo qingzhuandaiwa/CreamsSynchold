@@ -16,6 +16,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.jfinal.kit.PropKit;
 import com.jfinal.kit.StrKit;
 import com.yinkun.creams.bean.BuildingModel;
+import com.yinkun.creams.bean.FloorModel;
 import com.yinkun.creams.bean.ParkModel;
 import com.yinkun.creams.bean.RoomModel;
 import com.yinkun.creams.service.ParkService;
@@ -114,13 +115,34 @@ public class RoomSynch implements Runnable{
 			return false;
 		}
 		
+		StringBuilder sql = new StringBuilder("select * from ( ");
+		
 		try {
 			for(Iterator<RoomModel> it = rooms.iterator();it.hasNext();) {
 				RoomModel room = it.next();
-				if(room.getCtime().getTime() == room.getUtime().getTime() || room.getCtime().getTime() > lastUptDate.getTime()) {
-					this.insertDatas.add(room);
+//				if(room.getCtime().getTime() == room.getUtime().getTime() || room.getCtime().getTime() > lastUptDate.getTime()) {
+//					this.insertDatas.add(room);
+//				}else {
+//					this.updateDatas.add(room);
+//				}
+				sql.append("select '" + room.getId() + "' id UNION ");
+			}
+			
+			int lastUnIndx = sql.lastIndexOf("UNION");
+			int length = sql.length();
+			if(sql.lastIndexOf("UNION") > 0) {
+				sql.delete(lastUnIndx, length-1);
+			}
+			
+			sql.append("from dual) temp where EXISTS (SELECT 1 from room where temp.id = room_id)");
+			List<String> rcdS = DbHelper.getDb().query(sql.toString());
+			
+			for(Iterator<RoomModel> it = rooms.iterator();it.hasNext();) {
+				RoomModel roomModel = it.next();
+				if(rcdS.contains(roomModel.getId())) {
+					this.updateDatas.add(roomModel);
 				}else {
-					this.updateDatas.add(room);
+					this.insertDatas.add(roomModel);
 				}
 			}
 		} catch (Exception e) {
@@ -158,7 +180,10 @@ public class RoomSynch implements Runnable{
 		// TODO Auto-generated method stub
 		System.out.println("RoomSynch thread is running ...");
 		Date lastDate = RoomService.getLastUpdateDate();
-		String result = fetchFromWebApi(token,lastDate);
+		Calendar calendar = Calendar.getInstance();
+		calendar.setTime(lastDate);
+		calendar.add(Calendar.MINUTE, -1);//
+		String result = fetchFromWebApi(token,calendar.getTime());
 		if(StrKit.isBlank(result)) {
 			logger.error(new SimpleDateFormat(timeFormat).format(new Date()) + " :park 网络接口调用异常！");
 			return;

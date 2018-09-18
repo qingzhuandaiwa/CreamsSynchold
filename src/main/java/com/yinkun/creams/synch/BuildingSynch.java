@@ -129,9 +129,9 @@ public class BuildingSynch implements Runnable{
 //				}
 			}
 			int lastUnIndx = sql.lastIndexOf("UNION");
-			int lastIndx = sql.length();
+			int length = sql.length();
 			if(sql.lastIndexOf("UNION") > 0) {
-				sql.delete(sql.lastIndexOf("UNION"), lastIndx-1);
+				sql.delete(lastUnIndx, length-1);
 			}
 			
 			sql.append("from dual) temp where EXISTS (SELECT 1 from building where temp.id = building_id)");
@@ -251,7 +251,10 @@ public class BuildingSynch implements Runnable{
 		// TODO Auto-generated method stub
 		System.out.println("BuildingSynch thread is running ...");
 		Date lastDate = BuildingService.getLastUpdateDate();
-		String result = fetchFromWebApi(token,lastDate);
+		Calendar calendar = Calendar.getInstance();
+		calendar.setTime(lastDate);
+		calendar.add(Calendar.MINUTE, -1);//
+		String result = fetchFromWebApi(token,calendar.getTime());
 		if(StrKit.isBlank(result)) {
 //			System.out.println();
 			logger.error(new SimpleDateFormat(timeFormat).format(new Date()) + " :building 网络接口调用异常！");

@@ -18,6 +18,7 @@ import com.jfinal.kit.StrKit;
 import com.yinkun.creams.bean.BuildingModel;
 import com.yinkun.creams.bean.FloorModel;
 import com.yinkun.creams.service.FloorService;
+import com.yinkun.creams.utils.DbHelper;
 import com.yinkun.workgo.test.kit.HttpHelper;
 
 public class FloorSynch implements Runnable {
@@ -109,13 +110,36 @@ public class FloorSynch implements Runnable {
 			return false;
 		}
 		
+		StringBuilder sql = new StringBuilder("select * from ( ");
+		
+		
 		try {
 			for(Iterator<FloorModel> it = floors.iterator();it.hasNext();) {
 				FloorModel floorModel = it.next();
-				if(floorModel.getCtime().getTime() == floorModel.getUtime().getTime() || floorModel.getCtime().getTime() > lastUptDate.getTime()) {
-					this.insertDatas.add(floorModel);
-				}else {
+				sql.append("select '" + floorModel.getId() + "' id UNION ");
+				
+				
+//				if(floorModel.getCtime().getTime() == floorModel.getUtime().getTime() || floorModel.getCtime().getTime() > lastUptDate.getTime()) {
+//					this.insertDatas.add(floorModel);
+//				}else {
+//					this.updateDatas.add(floorModel);
+//				}
+			}
+			
+			int lastUnIndx = sql.lastIndexOf("UNION");
+			int length = sql.length();
+			if(sql.lastIndexOf("UNION") > 0) {
+				sql.delete(lastUnIndx, length-1);
+			}
+			
+			sql.append("from dual) temp where EXISTS (SELECT 1 from floor where temp.id = floor_id)");
+			List<String> rcdS = DbHelper.getDb().query(sql.toString());
+			for(Iterator<FloorModel> it = floors.iterator();it.hasNext();) {
+				FloorModel floorModel = it.next();
+				if(rcdS.contains(floorModel.getId())) {
 					this.updateDatas.add(floorModel);
+				}else {
+					this.insertDatas.add(floorModel);
 				}
 			}
 		} catch (Exception e) {
@@ -153,7 +177,12 @@ public class FloorSynch implements Runnable {
 		System.out.println("FloorSynch thread is running ...");
 
 		Date lastDate = FloorService.getLastUpdateDate();
-		String result = fetchFromWebApi(token, lastDate);
+		
+		Calendar calendar = Calendar.getInstance();
+		calendar.setTime(lastDate);
+		calendar.add(Calendar.MINUTE, -1);//
+		
+		String result = fetchFromWebApi(token, calendar.getTime());
 		if(StrKit.isBlank(result)) {
 //			System.out.println(new SimpleDateFormat(timeFormat).format(new Date()) + " : floor 网络接口调用异常！");
 			logger.error(new SimpleDateFormat(timeFormat).format(new Date()) + " : floor 网络接口调用异常！");
